@@ -18,7 +18,6 @@ const App = () => {
         <Route path='/create-post' element={<CreatePost />} />
       </Routes>
     </main>
-    <h1>Hello</h1>
     </BrowserRouter>
     
   )
