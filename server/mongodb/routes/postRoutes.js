@@ -1,18 +1,20 @@
 import express from 'express';
 import * as dotenv from 'dotenv';
-import { v2 as cloudinary } from 'cloudinary';
+import { Storage } from '@google-cloud/storage';
 import Post from '../models/post.js';
+import fs from 'fs';
 
 dotenv.config();
 
 const router = express.Router();
 
-// Cloudinary configuration
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+// Google Cloud Storage configuration
+const storage = new Storage({
+    keyFilename: process.env.GCLOUD_KEY_FILE,  // Path to the service account key file
+    projectId: process.env.GCLOUD_PROJECT_ID,  // Your project ID
 });
+
+const bucket = storage.bucket(process.env.GCLOUD_STORAGE_BUCKET); // Your bucket name
 
 // Get all posts
 router.get('/', async (req, res) => {
@@ -29,26 +31,27 @@ router.post('/', async (req, res) => {
     try {
         const { name, prompt, photo } = req.body;
 
-        // Check if the photo is base64 or a URL
+        // If the photo is base64, we'll convert it to a buffer and upload it
         if (photo) {
-            let photoUrl;
-            if (photo.startsWith('data:image')) {
-                // Upload base64 image
-                photoUrl = await cloudinary.uploader.upload(photo, { resource_type: 'auto' });
-            } else if (photo.startsWith('http')) {
-                // Upload image from URL
-                photoUrl = await cloudinary.uploader.upload(photo);
-            }
+            const buffer = Buffer.from(photo.split(',')[1], 'base64');
+            const fileName = `${Date.now()}.jpg`; // You can customize the file name
 
-            // Use the secure URL directly from Cloudinary
-            const securePhotoUrl = photoUrl.secure_url;
+            // Upload the image to Google Cloud Storage
+            const file = bucket.file(`images/${fileName}`);
+
+            // Upload the image with a public read permission
+            await file.save(buffer, { contentType: 'image/jpeg', public: true });
+
+            // Generate the public URL for the uploaded image
+            const publicUrl = `https://storage.googleapis.com/${process.env.GCLOUD_STORAGE_BUCKET}/images/${fileName}`;
 
             // Create the post with the secure image URL
             const newPost = await Post.create({
                 name,
                 prompt,
-                photo: securePhotoUrl, // Use the secure URL
+                photo: publicUrl, // Use the public URL from Google Cloud
             });
+
             res.status(201).json({ success: true, data: newPost });
         }
     } catch (error) {
