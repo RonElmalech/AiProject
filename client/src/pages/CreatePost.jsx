@@ -102,7 +102,7 @@ const CreatePost = () => {
         <h1 className='font-extrabold text-[#222328] text-[32px]'>Create</h1>
         <p className='mt-2 text-[#666e75] text-[16px] max-w-[500px]'>Create imaginative and visually stunning images through DALL-E AI and share them with the community</p>
       </div>
-      <form className='mt-16 max-w-3xl' onSubmit={handleSubmit}>
+      <form className='mt-16 max-w-3xl' onSubmit={handleSubmit} autoComplete="off">
         <div className='flex flex-col gap-5'>
           <FormField
             labelName='Your Name'
@@ -111,7 +111,7 @@ const CreatePost = () => {
             placeholder="John Doe"
             value={form.name}
             handleChange={handleChange}
-            autocomplete="name"  // Set autocomplete to "name" for the name field
+            autoComplete="name"  // Full name autofill
           />
           <FormField
             labelName='Prompt'
@@ -122,7 +122,6 @@ const CreatePost = () => {
             handleChange={handleChange}
             isSurpriseMe
             handleSurpriseMe={handleSurpriseMe}
-            autocomplete="off"  // Explicitly off for prompt to avoid autofill issues
           />
           
           <div className='relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
@@ -150,7 +149,7 @@ const CreatePost = () => {
         </div>
 
         <div className='mt-10'>
-          <p className='mt-2 text-[#666e75] text-[14px]'>
+          <p className='mt-2 text-[#666e75] text-[14px]' >
             Once you have created the image you want, you can share it with others in the community
           </p>
           <button
