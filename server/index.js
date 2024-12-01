@@ -5,39 +5,41 @@ import connectDB from './mongodb/connect.js';
 import postRoutes from './mongodb/routes/postRoutes.js';
 import dalleRoutes from './mongodb/routes/dalleRoutes.js';
 import path from 'path';
-import { log } from 'console';
 
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
+// Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '.env') });
-console.log(process.env.MONGODB_URL);  // Check MongoDB URL
-
 
 const app = express();
 app.use(cors());
-app.use(express.json({limit: '50mb'}));
+app.use(express.json({ limit: '50mb' }));
 
+// API routes
 app.use('/api/v1/post', postRoutes);
 app.use('/api/v1/dalle', dalleRoutes);
 
-app.get('/', async (req, res) => {
+app.get('/', (req, res) => {
     res.send('Hello From DALL-E');
 });
 
+// Connect to the database
 const startServer = async () => {
-
     try {
-        connectDB(process.env.MONGODB_URL);
-        app.listen(8080, () => {
-        console.log(`Server is started on http://localhost:8080`);
-    });
+        await connectDB(process.env.MONGODB_URL);
+        console.log("Connected to MongoDB");
+    } catch (error) {
+        console.log("Error connecting to MongoDB", error);
     }
-    catch (error) {
-        console.log(error);
-    }
-    
-}
-
+};
 startServer();
 
- 
+// Export the handler for Netlify
+export const handler = async (event, context) => {
+    return new Promise((resolve, reject) => {
+        app(event, context, (error, result) => {
+            if (error) {
+                return reject(error);
+            }
+            resolve(result);
+        });
+    });
+};
