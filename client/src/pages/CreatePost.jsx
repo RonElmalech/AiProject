@@ -9,26 +9,22 @@ const CreatePost = () => {
   const [form, setForm] = useState({
     name: '', 
     prompt: '', 
-    photo: null,  // Changed to null to store the file instead of base64
+    photo: '',  // Keep photo as a base64 or URL string for now
   })
   const [generatingImg, setGeneratingImg] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  // Handle submit and send image as form data
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (form.prompt && form.photo) {
       setLoading(true)
       try {
-        const formData = new FormData()
-        formData.append('name', form.name)
-        formData.append('prompt', form.prompt)
-        formData.append('photo', form.photo)  // Add the file here
-
         const response = await fetch('https://aiproject-server.onrender.com/api/v1/post', {
           method: 'POST',
-          body: formData,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(form),
         })
 
         if (response.ok) {
@@ -43,7 +39,7 @@ const CreatePost = () => {
         setLoading(false)
       }
     } else {
-      alert('Please enter a prompt and select an image')
+      alert('Please enter a prompt and generate an image')
     }
   }
 
@@ -58,15 +54,7 @@ const CreatePost = () => {
     setForm({ ...form, prompt: randomPrompt })
   }
 
-  // Handle image file input change
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      setForm({ ...form, photo: file })
-    }
-  }
-
-  // Function to generate image (not related to post submission)
+  // Generate image with the DALL-E API
   const generateImage = async () => {
     if (form.prompt) {
       try {
@@ -76,13 +64,14 @@ const CreatePost = () => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prompt: form.prompt }),
         })
+
         if (!response.ok) throw new Error('Error generating image')
 
         const contentType = response.headers.get('Content-Type')
         if (contentType && contentType.startsWith('image/')) {
           const blob = await response.blob()
           const base64Image = await convertBlobToBase64(blob)
-          setForm({ ...form, photo: base64Image })
+          setForm({ ...form, photo: base64Image })  // Set base64 string to form
         } else {
           const errorData = await response.json()
           throw new Error(errorData.error || 'Unexpected response format')
@@ -97,6 +86,7 @@ const CreatePost = () => {
     }
   }
 
+  // Convert image blob to base64 string
   const convertBlobToBase64 = (blob) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -136,7 +126,7 @@ const CreatePost = () => {
           <div className='relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
               focus:border-blue-500 w-64 p-3 h-64 flex justify-center items-center'>
             {form.photo ? (
-              <img src={URL.createObjectURL(form.photo)} alt={form.prompt} className='w-full h-full object-contain' />
+              <img src={form.photo} alt={form.prompt} className='w-full h-full object-contain' />
             ) : (
               <img src={preview} alt="preview" className='w-9/12 h-9/12 object-contain opacity-40' />
             )}
@@ -146,14 +136,6 @@ const CreatePost = () => {
               </div>
             )}
           </div>
-
-          <input 
-            type="file" 
-            name="photo" 
-            accept="image/*"
-            onChange={handleFileChange} 
-            className="mt-3" 
-          />
         </div>
 
         <div className='mt-5 flex gap-5'>
