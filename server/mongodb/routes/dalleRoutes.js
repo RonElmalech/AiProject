@@ -2,8 +2,7 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import fetch from 'node-fetch'; // Import fetch for Cloudflare API calls
 
-const cloudflareEnvPath = 'C:/Users/ronel/Desktop/AiProject/server/mongodb/routes/cloudflare.env'; 
-dotenv.config({ path: cloudflareEnvPath });
+dotenv.config();
 
 
 const router = express.Router();
