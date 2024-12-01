@@ -31,30 +31,29 @@ router.post('/', async (req, res) => {
         const { name, prompt, photo } = req.body;
 
         // Check if the photo is base64 or a URL
-        let photoUrl;
-
         if (photo) {
-            // If the photo is a base64 string
+            let photoUrl;
             if (photo.startsWith('data:image')) {
-                // Upload the base64 image to Cloudinary
-                photoUrl = await cloudinary.uploader.upload(photo, { 
-                    resource_type: 'auto' // Cloudinary will automatically detect the type
-                });
+                // Upload base64 image
+                photoUrl = await cloudinary.uploader.upload(photo, { resource_type: 'auto' });
             } else if (photo.startsWith('http')) {
-                // If the photo is a URL (such as from DALL·E), upload it directly
+                // Upload image from URL
                 photoUrl = await cloudinary.uploader.upload(photo);
             }
+        
+            // Force HTTPS on the Cloudinary URL if necessary
+            const securePhotoUrl = photoUrl.url.replace('http://', 'https://');
+        
+            // Create the post with the secure image URL
+            const newPost = await Post.create({
+                name,
+                prompt,
+                photo: securePhotoUrl, // Use the secure URL
+            });
+            res.status(201).json({ success: true, data: newPost });
         }
-
-        // Create the post in the database
-        const newPost = await Post.create({
-            name,
-            prompt,
-            photo: photoUrl.url, // Store the URL of the uploaded image
-        });
-
-        res.status(201).json({ success: true, data: newPost });
-    } catch (error) {
+     }
+      catch (error) {
         console.error('Error during image upload or post creation:', error);
         res.status(500).json({ success: false, message: error.message });
     }
