@@ -111,6 +111,7 @@ const CreatePost = () => {
             placeholder="John Doe"
             value={form.name}
             handleChange={handleChange}
+            autocomplete="name"  // Added autocomplete
           />
           <FormField
             labelName='Prompt'
@@ -121,6 +122,7 @@ const CreatePost = () => {
             handleChange={handleChange}
             isSurpriseMe
             handleSurpriseMe={handleSurpriseMe}
+            autocomplete="off"  // Added autocomplete
           />
           
           <div className='relative bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
