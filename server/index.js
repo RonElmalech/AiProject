@@ -10,18 +10,30 @@ import path from 'path';
 dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const app = express();
-app.use(cors());
+
+// CORS Configuration
+const corsOptions = {
+    origin: 'https://aiproject-hx8r.onrender.com', // Allow only your frontend
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Enable CORS with the specified options
+app.use(cors(corsOptions));
+
+// Parse incoming requests with JSON body
 app.use(express.json({ limit: '50mb' }));
 
 // API routes
 app.use('/api/v1/post', postRoutes);
 app.use('/api/v1/dalle', dalleRoutes);
 
+// Simple test route
 app.get('/', (req, res) => {
     res.send('Hello From DALL-E');
 });
 
-// Connect to the database
+// Connect to MongoDB
 const startServer = async () => {
     try {
         await connectDB(process.env.MONGODB_URL);
@@ -31,6 +43,9 @@ const startServer = async () => {
     }
 };
 startServer();
+
+// Handle preflight (OPTIONS) requests for CORS
+app.options('*', cors(corsOptions));  // Preflight request handling
 
 // Start the server and listen on the correct port
 const port = process.env.PORT || 8080;  // Dynamic port on Render
