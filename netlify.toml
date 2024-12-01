@@ -3,8 +3,8 @@
 [build]
   # The React app is in the 'client' folder, so Netlify will build it from there.
   base = "client"  # Specify that the frontend is located inside the 'client' folder
-  publish = "client/build"  # The output folder for the React build (after 'npm run build')
-
+  publish = "client/dist"  # Vite's output folder (not 'client/build', it should be 'client/dist')
+  
   # Serverless functions (Express app) are located inside the 'server/functions' folder
   functions = "server/functions"  # Directory containing serverless functions for backend
 
@@ -13,8 +13,3 @@
   from = "/api/*"
   to = "/.netlify/functions/:splat"  # The Netlify function path
   status = 200
-
-# Optional: Environment variables for backend (already set in Netlify UI)
-# Uncomment if you want to add or override any environment variables here
-# [build.environment]
-#   MONGODB_URL = "your_mongodb_connection_url_here"
