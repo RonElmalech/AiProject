@@ -8,9 +8,11 @@ dotenv.config();
 
 const router = express.Router();
 
-// Google Cloud Storage configuration
+// Parse the service account credentials from environment variable
+const googleCredentials = JSON.parse(process.env.GCLOUD_KEY_FILE);
+
 const storage = new Storage({
-    keyFilename: process.env.GCLOUD_KEY_FILE,  // Path to the service account key file
+    credentials: googleCredentials,  // Use credentials directly from environment variable
     projectId: process.env.GCLOUD_PROJECT_ID,  // Your project ID
 });
 
