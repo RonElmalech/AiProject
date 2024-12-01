@@ -8,28 +8,101 @@ import getRandomPrompt from '../utils/index.js'
 const CreatePost = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({
-    name:'',
+    name:'', 
     prompt:'',
     photo: '',
   })
 
   const [generatingImg, setGeneratingImg] = useState(false);
   const[loading, setLoading] = useState(false);
-  const handleSubmit = () => {
 
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if(form.prompt && form.photo) {
+    setLoading(true);
+    try{
+    const response = await fetch('http://localhost:8080/api/v1/post', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(form),
+    });
+    await response.json();
+    navigate('/');
+    }
+    catch (error) {
+      alert(error);
+    }
+    finally {
+      setLoading(false);
+    }
+  } else {
+    alert('Please enter a prompt and generate an image');
   }
+  }
+
+
   const handleChange = (e) => {
      setForm({...form, [e.target.name]: e.target.value})
   } 
+
+
   const handleSurpriseMe = () => {
     const randomPrompt = getRandomPrompt(form.prompt);
     setForm({...form, prompt: randomPrompt})
   }
 
-  const generateImage = () => {
-   
-  }
- 
+
+  const generateImage = async () => {
+    if (form.prompt) {
+      try {
+        setGeneratingImg(true);
+  
+        const response = await fetch('http://localhost:8080/api/v1/dalle/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: form.prompt }),
+        });
+  
+        if (!response.ok) {
+          throw new Error(`HTTP Error: ${response.status}`);
+        }
+  
+        const contentType = response.headers.get('Content-Type');
+        if (contentType && contentType.startsWith('image/')) {
+          // Handle image response as a blob
+          const blob = await response.blob();
+          const base64Image = await convertBlobToBase64(blob); // Convert blob to base64
+  
+          // Set the base64 image URL in the form state
+          setForm({ ...form, photo: base64Image });
+        } else {
+          // Handle non-image (e.g., error messages)
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Unexpected response format');
+        }
+      } catch (error) {
+        console.error('Error generating image:', error.message);
+        alert(`Error: ${error.message}`);
+      } finally {
+        setGeneratingImg(false);
+      }
+    } else {
+      alert('Please enter a prompt');
+    }
+  };
+  
+  // Function to convert blob to base64
+  const convertBlobToBase64 = (blob) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob); // This will return a base64 string
+    });
+  };
+  
+
   return (
     <section className='max-w-7xl mx-auto'>
       <div>
@@ -85,7 +158,7 @@ const CreatePost = () => {
     type='button'
     onClick={generateImage}
     className='text-white bg-green-700 font-medium rounded-md text-sm w-full sm:w-auto px-5 py-2.5 text-center'>
-      {generatingImg ? 'Generatin...' : 'Generate'}
+      {generatingImg ? 'Generating...' : 'Generate'}
     </button>
   </div>
 
