@@ -111,7 +111,7 @@ const CreatePost = () => {
             placeholder="John Doe"
             value={form.name}
             handleChange={handleChange}
-            autoComplete="given-name" 
+            autocomplete="given-name" 
           />
           <FormField
             labelName='Prompt'
