@@ -7,7 +7,7 @@ import dalleRoutes from './mongodb/routes/dalleRoutes.js';
 import path from 'path';
 
 // Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '.env') });
+dotenv.config({ path: path.resolve(import.meta.url, '.env') });
 
 const app = express();
 app.use(cors());
