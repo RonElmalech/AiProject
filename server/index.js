@@ -7,7 +7,7 @@ import dalleRoutes from './mongodb/routes/dalleRoutes.js';
 import path from 'path';
 
 // Load environment variables
-dotenv.config({ path: path.resolve(import.meta.url, '.env') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
 
 const app = express();
 app.use(cors());
@@ -32,14 +32,8 @@ const startServer = async () => {
 };
 startServer();
 
-// Export the handler for Netlify
-export const handler = async (event, context) => {
-    return new Promise((resolve, reject) => {
-        app(event, context, (error, result) => {
-            if (error) {
-                return reject(error);
-            }
-            resolve(result);
-        });
-    });
-};
+// Start the server and listen on the correct port
+const port = process.env.PORT || 8080;  // Dynamic port on Render
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
