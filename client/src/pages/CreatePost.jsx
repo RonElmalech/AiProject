@@ -26,17 +26,19 @@ const CreatePost = () => {
         const response = await axios.post('https://aiproject-server.onrender.com/api/v1/post', form, {
           headers: { 'Content-Type': 'application/json' },
         });
-        console.log("Backend response:", response.data); // Debug log
-
-
+      
+        console.log("Backend response:", response); // Log the full response
         if (response.status === 200) {
           navigate('/');
         } else {
-          throw new Error('Failed to create post');
+          console.error("Unexpected status:", response.status); // Log unexpected status codes
+          alert(`Unexpected response: ${response.statusText}`);
         }
       } catch (error) {
-        alert(error);
-      } finally {
+        console.error("Error details:", error); // Log error details
+        alert(`Failed to fetch: ${error.message}`);
+      }
+       finally {
         setLoading(false);
       }
     } else {
