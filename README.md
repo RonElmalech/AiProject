@@ -95,9 +95,6 @@ Run the application locally:
 npm start
 Visit http://localhost:5000 in your browser.
 
-
-
-```markdown
 ## Usage
 
 After logging in, users can input a descriptive text prompt to generate an AI-powered image. Once the image is generated, it will be stored in Google Cloud Storage, and users can view and share it.
@@ -131,13 +128,12 @@ Response:
 }
 
 
-```markdown
 ## Testing
 
 AiProject includes unit tests using Jest and Supertest to ensure the reliability of the backend. 
 
 ### Run Unit Tests with Jest:
-```bash
+
 npm run test
 Test Coverage:
 The test coverage ensures that critical components, such as image generation and API routes, are thoroughly tested.
