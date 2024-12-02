@@ -18,32 +18,38 @@ const CreatePost = () => {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     if (form.prompt && form.photo) {
       setLoading(true);
       console.log("Form data being sent:", form); // Debug log
+  
       try {
-        const response = await axios.post('https://aiproject-server.onrender.com/api/v1/post', form, {
-          headers: { 'Content-Type': 'application/json' },
-        });
-      
+        const response = await axios.post(
+          'https://aiproject-server.onrender.com/api/v1/post',
+          form,
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+  
+        console.log("Response status:", response.status);
+        console.log("Response data:", response.data);
+  
         if (response.status === 200 || response.status === 201) {
-          navigate('/');
+          navigate('/'); // Redirect on success
         } else {
-          console.error("Unexpected status:", response.status); // Log unexpected status codes
+          console.error("Unexpected status:", response.status);
           alert(`Unexpected response: ${response.statusText}`);
         }
       } catch (error) {
-        console.error("Error details:", error); // Log error details
+        console.error("Error details:", error);
         alert(`Failed to fetch: ${error.message}`);
-      }
-       finally {
+      } finally {
         setLoading(false);
       }
     } else {
       alert('Please enter a prompt and generate an image');
     }
   };
+  
 
   // Handle form field change
   const handleChange = (e) => {
