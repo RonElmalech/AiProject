@@ -37,12 +37,12 @@ const Home = () => {
       }, 500)
     );
   };
-  console.log("Backend URL:", process.env.BACKEND_URL); 
+  console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL); 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${process.env.BACKEND_URL}/api/v1/post`, {
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/post`, {
           headers: { 'Content-Type': 'application/json' },
         });
         setAllPosts(response.data.data.reverse());
