@@ -23,7 +23,7 @@ const CreatePost = () => {
       setLoading(true);  
       try {
         const response = await axios.post(
-          'https://aiproject-server.onrender.com/api/v1/post',
+          `${process.env.BACKEND_URL}/api/v1/post`,
           form,
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -63,7 +63,7 @@ const CreatePost = () => {
       try {
         setGeneratingImg(true);
         const response = await axios.post(
-          'https://aiproject-server.onrender.com/api/v1/dalle/generate-image',
+          `${process.env.BACKEND_URL}/api/v1/dalle/generate-image`,
           { prompt: form.prompt },
           { headers: { 'Content-Type': 'application/json' } }
         );

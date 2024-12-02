@@ -13,13 +13,16 @@ const app = express();
 
 // CORS Configuration
 const corsOptions = {
-    origin: 'https://aiproject-hx8r.onrender.com', // Allow only your frontend
+    origin: `${process.env.CLIENT_URL}`, // Allow only your frontend
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 // Enable CORS with the specified options
 app.use(cors(corsOptions));
+
+// Handle preflight (OPTIONS) requests for CORS
+app.options('*', cors(corsOptions));  // Preflight request handling
 
 // Parse incoming requests with JSON body
 app.use(express.json({ limit: '50mb' }));
@@ -44,8 +47,7 @@ const startServer = async () => {
 };
 startServer();
 
-// Handle preflight (OPTIONS) requests for CORS
-app.options('*', cors(corsOptions));  // Preflight request handling
+
 
 // Start the server and listen on the correct port
 const port = process.env.PORT || 8080;  // Dynamic port on Render
