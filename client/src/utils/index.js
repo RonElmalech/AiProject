@@ -12,7 +12,13 @@ export default function getRandomPrompt(prompt) {
     return randomPrompt;
 }
 
-export async function downloadImage(_id,photo) {
-    FileSaver.saveAs(photo, `download-${_id}.jpg`);
-}
-
+export async function downloadImage(_id, photo) {
+    try {
+      const response = await fetch(photo); // Fetch the image
+      const blob = await response.blob(); // Convert the response to a Blob
+      FileSaver.saveAs(blob, `download-${_id}.jpg`); // Save the image as a file
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  }
+  
