@@ -7,7 +7,7 @@ import dalleRoutes from './mongodb/routes/dalleRoutes.js';
 import path from 'path';
 
 // Load environment variables
-dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+dotenv.config();
 
 const app = express();
 
