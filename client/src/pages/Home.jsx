@@ -37,8 +37,7 @@ const Home = () => {
       }, 500)
     );
   };
- console.log(`${process.env.BACKEND_URL}/api/v1/post`);
- 
+  console.log("Backend URL:", process.env.BACKEND_URL); 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
