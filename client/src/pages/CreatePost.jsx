@@ -22,10 +22,9 @@ const CreatePost = () => {
     if (form.prompt && form.photo) {
       setLoading(true);  
       try {
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/api/v1/post`,
-          form,
-          { headers: { 'Content-Type': 'application/json' } }
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/post`,
+        form,
+        { headers: { 'Content-Type': 'application/json' } }
         );
     
         if (response.status === 200 || response.status === 201) {
@@ -62,10 +61,9 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true);
-        const response = await axios.post(
-          `${process.env.REACT_APP_BACKEND_URL}/api/v1/dalle/generate-image`,
-          { prompt: form.prompt },
-          { headers: { 'Content-Type': 'application/json' } }
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/v1/dalle/generate-image`,
+        { prompt: form.prompt },
+        { headers: { 'Content-Type': 'application/json' } }
         );
 
         if (response.status === 200 && response.data.imageBase64) {
