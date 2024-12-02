@@ -21,9 +21,6 @@ const corsOptions = {
 // Enable CORS with the specified options
 app.use(cors(corsOptions));
 
-// Handle preflight (OPTIONS) requests for CORS
-app.options('*', cors(corsOptions));  // Preflight request handling
-
 // Parse incoming requests with JSON body
 app.use(express.json({ limit: '50mb' }));
 
