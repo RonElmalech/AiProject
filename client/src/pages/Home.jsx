@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Loader, Card, FormField } from '../components';
+import axios from 'axios';  // Import axios
 
 const RenderCards = ({ data, title }) => {
   if (data?.length > 0) {
@@ -41,14 +42,10 @@ const Home = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await fetch('https://aiproject-server.onrender.com/api/v1/post', {
-          method: 'GET',
+        const response = await axios.get('https://aiproject-server.onrender.com/api/v1/post', {
           headers: { 'Content-Type': 'application/json' },
         });
-        if (response.ok) {
-          const data = await response.json();
-          setAllPosts(data.data.reverse());
-        }
+        setAllPosts(response.data.data.reverse());
       } catch (error) {
         alert(error);
       } finally {
