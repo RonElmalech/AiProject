@@ -22,6 +22,7 @@ const Home = () => {
   const [searchedResults, setSearchedResults] = useState(null);
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchText, setSearchText] = useState('');
+  console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL); 
 
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
@@ -37,13 +38,12 @@ const Home = () => {
       }, 500)
     );
   };
-  console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL); 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/v1/post`, {
-          headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json' },
         });
         setAllPosts(response.data.data.reverse());
       } catch (error) {
