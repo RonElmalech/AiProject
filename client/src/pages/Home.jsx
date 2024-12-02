@@ -22,7 +22,6 @@ const Home = () => {
   const [searchedResults, setSearchedResults] = useState(null);
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchText, setSearchText] = useState('');
-  console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL); 
 
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
