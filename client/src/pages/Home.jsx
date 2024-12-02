@@ -22,7 +22,7 @@ const Home = () => {
   const [searchedResults, setSearchedResults] = useState(null);
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchText, setSearchText] = useState('');
-  console.log("Backend URL:", process.env.VITE_BACKEND_URL); 
+  console.log("Backend URL:", import.meta.env.VITE_BACKEND_URL); 
 
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
@@ -42,7 +42,7 @@ const Home = () => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${process.env.VITE_BACKEND_URL}/api/v1/post`, {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/post`, {
         headers: { 'Content-Type': 'application/json' },
         });
         setAllPosts(response.data.data.reverse());
