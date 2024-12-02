@@ -27,8 +27,7 @@ const CreatePost = () => {
           headers: { 'Content-Type': 'application/json' },
         });
       
-        console.log("Backend response:", response); // Log the full response
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           navigate('/');
         } else {
           console.error("Unexpected status:", response.status); // Log unexpected status codes
