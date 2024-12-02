@@ -19,6 +19,7 @@ Deployed on [Render](https://aiproject-hx8r.onrender.com/), AiProject offers a s
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -30,12 +31,11 @@ Key features include:
 - **AI Image Generation**: Text-based prompts generate unique images using Cloudflare’s AI model.
 - **User Authentication**: Users can register, log in, and manage profiles securely.
 - **Image Gallery**: View and save generated images.
-- **Storage**: All images are stored on Google Cloud Storage.
+- **Storage**: All images are stored in Google Cloud Storage.
 
 Explore more at [AiProject Website](https://aiproject-hx8r.onrender.com/).
 
 ---
-
 ## Tech Stack
 
 AiProject leverages a combination of powerful technologies to deliver a fast and responsive platform:
@@ -95,22 +95,24 @@ Run the application locally:
 npm start
 Visit http://localhost:5000 in your browser.
 
-Usage
+
+
+```markdown
+## Usage
+
 After logging in, users can input a descriptive text prompt to generate an AI-powered image. Once the image is generated, it will be stored in Google Cloud Storage, and users can view and share it.
 
-Example API Request:
+### Example API Request:
 You can interact with the API using Postman or cURL:
 
-POST /generate
-Description: Generate an image from a text prompt.
-
-Request Body:
-
-{
-  "prompt": "A futuristic city skyline at sunset"
-}
+#### POST /generate
+- **Description**: Generate an image from a text prompt.
+- **Request Body**:
+   ```json
+   {
+     "prompt": "A futuristic city skyline at sunset"
+   }
 Response:
-
 {
   "imageUrl": "https://aiproject-hx8r.onrender.com/images/generated_image.png"
 }
@@ -127,10 +129,15 @@ Response:
 {
   "imageUrl": "string"
 }
-Testing
-AiProject includes unit tests using Jest and Supertest to ensure the reliability of the backend.
 
-Run Unit Tests with Jest:
+
+```markdown
+## Testing
+
+AiProject includes unit tests using Jest and Supertest to ensure the reliability of the backend. 
+
+### Run Unit Tests with Jest:
+```bash
 npm run test
 Test Coverage:
 The test coverage ensures that critical components, such as image generation and API routes, are thoroughly tested.
@@ -151,14 +158,14 @@ MIT License - See the LICENSE file for details.
 Contact
 For any questions, feedback, or collaboration inquiries, feel free to reach out:
 
-Email: ron.elmalech@example.com
+Email: ronelmalechh@gmail.com
 GitHub: RonElmalech
 Acknowledgements
 Thanks to Cloudflare for providing the AI model for image generation.
 Thanks to Google Cloud for storage solutions.
 Special thanks to the open-source community for the tools and libraries that make this project possible.
 
-Make sure that you are copying this Markdown text correctly into your Git repository, and it should render with proper heading sizes and formatting.
+
 
 
 
