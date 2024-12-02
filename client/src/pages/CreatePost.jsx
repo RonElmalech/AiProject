@@ -21,10 +21,13 @@ const CreatePost = () => {
 
     if (form.prompt && form.photo) {
       setLoading(true);
+      console.log("Form data being sent:", form); // Debug log
       try {
         const response = await axios.post('https://aiproject-server.onrender.com/api/v1/post', form, {
           headers: { 'Content-Type': 'application/json' },
         });
+        console.log("Backend response:", response.data); // Debug log
+
 
         if (response.status === 200) {
           navigate('/');
