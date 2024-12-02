@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { FormField, Loader } from '../components'
 import preview from '../assets/preview.png'
 import getRandomPrompt from '../utils/index.js'
+import axios from 'axios'  // Import axios
 
 const CreatePost = () => {
   const navigate = useNavigate()
@@ -21,14 +22,11 @@ const CreatePost = () => {
     if (form.prompt && form.photo) {
       setLoading(true)
       try {
-        const response = await fetch('https://aiproject-server.onrender.com/api/v1/post', {
-          method: 'POST',
+        const response = await axios.post('https://aiproject-server.onrender.com/api/v1/post', form, {
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(form),
         })
 
-        if (response.ok) {
-          await response.json()
+        if (response.status === 200) {
           navigate('/')
         } else {
           throw new Error('Failed to create post')
@@ -59,22 +57,20 @@ const CreatePost = () => {
     if (form.prompt) {
       try {
         setGeneratingImg(true)
-        const response = await fetch('https://aiproject-server.onrender.com/api/v1/dalle/generate-image', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: form.prompt }),
-        })
+        const response = await axios.post(
+          'https://aiproject-server.onrender.com/api/v1/dalle/generate-image',
+          { prompt: form.prompt },
+          { headers: { 'Content-Type': 'application/json' } }
+        )
 
-        if (!response.ok) throw new Error('Error generating image')
+        if (response.status !== 200) throw new Error('Error generating image')
 
-        const contentType = response.headers.get('Content-Type')
+        const contentType = response.headers['content-type']
         if (contentType && contentType.startsWith('image/')) {
-          const blob = await response.blob()
-          const base64Image = await convertBlobToBase64(blob)
+          const base64Image = `data:image/png;base64,${response.data.imageBase64}`
           setForm({ ...form, photo: base64Image })  // Set base64 string to form
         } else {
-          const errorData = await response.json()
-          throw new Error(errorData.error || 'Unexpected response format')
+          throw new Error('Unexpected response format')
         }
       } catch (error) {
         alert(`Error: ${error.message}`)
@@ -84,16 +80,6 @@ const CreatePost = () => {
     } else {
       alert('Please enter a prompt')
     }
-  }
-
-  // Convert image blob to base64 string
-  const convertBlobToBase64 = (blob) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onloadend = () => resolve(reader.result)
-      reader.onerror = reject
-      reader.readAsDataURL(blob)
-    })
   }
 
   return (
