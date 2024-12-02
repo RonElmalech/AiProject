@@ -37,7 +37,8 @@ const Home = () => {
       }, 500)
     );
   };
-
+ console.log(`${process.env.BACKEND_URL}/api/v1/post`);
+ 
   useEffect(() => {
     const fetchPosts = async () => {
       setLoading(true);
